@@ -24,6 +24,7 @@ namespace zstm{
             ZSTM_INT32_BT   GetFileNum          ()  const;
             ZSTM_BOOL_BT    GetFileStat         ();
             ZSTM_BOOL_BT    Unzip               ( const ZSTM_PATH_T );
+            ZSTM_BOOL_BT    operator>>          (const ZSTM_PATH_T);
 
         protected:
             ZSTM_CSTR_T     ZipPath;

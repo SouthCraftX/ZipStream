@@ -17,7 +17,7 @@ namespace zstm{
         if( this->ZipPassword != NULL ){
             zip_set_default_password( this->Archive, this->ZipPassword );
             this->FileCount = zip_get_num_entries(this->Archive, ZIP_FL_UNCHANGED);
-            ::malloc( this->FileStat , (this->FileCount)*(sizeof(zip_stat_t)) );
+            this->FileStat = (zip_stat_t*)::malloc(  (this->FileCount)*(sizeof(zip_stat_t)) );
 
             for( ZSTM_FLNUM_T now ; now < (this->FileCount) ; now++ ){
                 zip_stat_index( this->Archive, now, 0, &(this->FileStat[now]);
@@ -28,7 +28,7 @@ namespace zstm{
     
 
     //Unzip a compressed package
-    ZSTM_BOOL_BT izipstream::Unzip( const ZSTM_PATH_T outdir ){
+    ZSTM_BOOL_BT izipstream::Unzip( const ZSTM_PATH_T outdir ) const{
 
         if( this->Archive == NULL ){
             this->PutErrorMessage( FunctionName::Unzip , ErrorText::ZipNotOpen);
@@ -43,23 +43,17 @@ namespace zstm{
                 return StatusCode(IndexFile);
             }
 
-            ZSTM_PATH_T outpath = NULL;
-            ZSTM_SIZE_T malloc_size = (::strlen(outdir) + :: strlen( this->FileStat[now].name) ++ );
-            outpath = ::malloc( malloc_size); 
+            
+            ZSTM_SIZE_T malloc_size = (::strlen(outdir) + ::strlen( this->FileStat[now].name) ++ );
+            char outpath [malloc_size];
 
-            if( outpath == NULL ){
-                this->PutErrorMessage( FunctionName::Unzip , ErrorText::AllocateMemory , ToString( malloc_size )));
-                return StatusCode( AllocateMemory );
-            }
-
-            outpath = outdir ;
+            ::strcpy( outpath , outdir) ;
             ::strncat( outpath , this->stat[now].name , malloc_size );
             FILE* localfile = ::fopen( outpath , "w+" );
 
             if( localfile == NULL ){
                 this->PutErrorMessage( FunctionName::Unzip , ErrorText::CreateLocalFile , outpath );
                 ::fclose( localfile );
-                ::free( outpath );
                 return StatusCode( CreateLocalFile);
             }
                         
@@ -92,6 +86,9 @@ namespace zstm{
                    
     }
 
+    ZSTM_BOOL_BT operator>>(const ZSTM_PATH_T outpath ){
+        this->Unzip( outpath );
+    }
 
     //Get the error message
     ZSTM_CSTR_T izipstream::GetError const(){
@@ -151,7 +148,7 @@ namespace zstm{
             return StatusCode( Okay );
         }
 
-        buffer = ::malloc( this->BufferSize++ );
+        buffer = (ZSTM_CSTR_BT)::malloc( this->BufferSize++ );
         if( buffer == NULL){
             this -> PutErrorMessage( FunctionName::CleanBuffer , ErrorText::AllocateFail , ToString( this->BufferSize ));
         }
