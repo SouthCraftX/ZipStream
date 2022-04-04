@@ -5,7 +5,12 @@
 
 namespace zstm{
 
-    enum ErrorCode{
+    enum StatusCode{
+
+        //Successful
+        Okay,
+
+        //Fail
         ZipNotOpen = 1,
         BufferSizeTooBig,
         BufferSizeTooSmall,
@@ -13,7 +18,9 @@ namespace zstm{
         GetFileNum,
         OpenZip,
         CloseZip,
-        IndexFile
+        IndexFile,
+        Int2String,
+        PutErrorMsg
     }
 
     const ZSTM_BOOL_BT errlv_normal = 1;
