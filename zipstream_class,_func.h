@@ -86,8 +86,8 @@ namespace zstm{
                    
     }
 
-    ZSTM_BOOL_BT operator>>(const ZSTM_PATH_T outpath ){
-        this->Unzip( outpath );
+    ZSTM_BOOL_BT operator>>(const izipstream & zs,const ZSTM_PATH_T outpath ){
+        zs->Unzip( outpath );
     }
 
     //Get the error message
