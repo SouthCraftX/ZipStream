@@ -58,23 +58,40 @@ namespace zstm{
 
             if( localfile == NULL ){
                 this->PutErrorMessage( FunctionName::Unzip , ErrorText::CreateLocalFile , outpath );
+                ::fclose( localfile );
+                ::free( outpath );
                 return StatusCode( CreateLocalFile);
             }
                         
             ZSTM_SIZE_T now_size = 0;
             while( now_size < this->stat[now].size ){
                 ZSTM_UINT8_BT* buffer;
-                if( this->CleanBuffer(buffer) == StatusCode)
-                if( (ZSTM_INT64_BT) zip_fread( file , buffer , this->BufferSize) < 0 )
-            }
-                        }
-                    }
-                   
+                if( this->CleanBuffer(buffer) != StatusCode( Okay )){
+                    this->PutErrorMessage( FunctionName::Unzip , ErrorText::CleanBuffer , ToString( this->BufferSize ) , "bytes.");
+                    ::free( buffer ) ;
+                    ::fclose( localfile );
+                    return StatusCode( CleanBuffer);
                 }
 
+                if( (ZSTM_INT64_BT) ::zip_fread( file , buffer , this->BufferSize) < 0 ){
+                    this->PutErrorMessage( FunctionName::Unzip , ErrorText::ReadFileFromZip , this->FileStat[now].name );
+                    ::free( buffer ) ;
+                    ::fclose( localfile );
+                    return StatusCode( ReadFileFromZip );
+                }
+
+                if( ::fwrite( buffer , 1 , this->BufferSize , localfile ) != this->BufferSize ){
+                    this->PutErrorMessage( FunctionName::Unzip , ErrorText::WriteLocalFile , outpath );
+                    ::free( buffer ) ;
+                    ::fclose( localfile );
+                    return StatusCode( WriteLocalFile );
+                }
+                now_size += this->BufferSize;
             }
         }
+                   
     }
+
 
     //Get the error message
     ZSTM_CSTR_T izipstream::GetError const(){

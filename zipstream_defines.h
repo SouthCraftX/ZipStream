@@ -8,10 +8,10 @@ namespace zstm{
     enum StatusCode{
 
         //Successful
-        Okay,
+        Okay = 0,
 
         //Fail
-        ZipNotOpen = 1,
+        ZipNotOpen,
         BufferSizeTooBig,
         BufferSizeTooSmall,
         AllocateMemory,
@@ -21,7 +21,10 @@ namespace zstm{
         IndexFile,
         Int2String,
         PutErrorMsg,
-        CreateLocalFile
+        CreateLocalFile,
+        CleanBuffer,
+        ReadFileFromZip,
+        WriteLocalFile
     }
 
     const ZSTM_BOOL_BT errlv_normal = 1;
@@ -40,7 +43,10 @@ namespace zstm{
         ZSTM_ERRMSG_T   ZipNotOpen        =  "No compressed packages were opened.";
         ZSTM_ERRMSG_T   AllocateFail      =  "Failed to allocate memory. size=";
         ZSTM_ERRMSG_T   IndexFile         =  "Failed to index file:";
-        ZSTM_ERRMSG_T   CreateLocalFile   =  "Failed to crafte local file:"
+        ZSTM_ERRMSG_T   CreateLocalFile   =  "Failed to crafte local file:";
+        ZSTM_ERRMSG_T   CleanBuffer       =  "Failed to clean buffer, size=";
+        ZSTM_ERRMSG_T   ReadFileFromZip   =  "Failed to read a file from zip:";
+        ZSTM_ERRMSG_T   WriteLocalFile    =  "Failed to waite a local file:"
     }
 
     // Function Names
