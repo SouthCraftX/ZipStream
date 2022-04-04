@@ -12,21 +12,20 @@ namespace zstm{
         if( this->Archive == NULL ){
             this->PutErrorMessage(("Failed to open %s.Error code :%i", this->ZipPath , this->ErrorCode));
             zip_close( this-> Archive );
-            return false;
+            return StatusCode( OpenZip );
         }
-        else{
-            if( this->ZipPassWord != NULL ){
-                zip_set_default_password( this->Archive, this->ZipPassword );
-                this->FileCount = zip_get_num_entries(this->Archive, ZIP_FL_UNCHANGED);
-                ::malloc( this->FileStat , (this->FileCount)*(sizeof(zip_stat_t)) );
+        if( this->ZipPassword != NULL ){
+            zip_set_default_password( this->Archive, this->ZipPassword );
+            this->FileCount = zip_get_num_entries(this->Archive, ZIP_FL_UNCHANGED);
+            ::malloc( this->FileStat , (this->FileCount)*(sizeof(zip_stat_t)) );
 
-                for( ZSTM_FLNUM_T now ; now < (this->FileCount) ; now++ ){
-                    zip_stat_index( this->Archive, now, 0, &(this->FileStat[now]);
-                }
+            for( ZSTM_FLNUM_T now ; now < (this->FileCount) ; now++ ){
+                zip_stat_index( this->Archive, now, 0, &(this->FileStat[now]);
             }
-            return StatusCode( Okay ) ;
         }
+        return StatusCode( Okay ) ;
     }
+    
 
     //Unzip a compressed package
     ZSTM_BOOL_BT izipstream::Unzip( const ZSTM_PATH_T outdir ){
@@ -35,25 +34,40 @@ namespace zstm{
             this->PutErrorMessage( FunctionName::Unzip , ErrorText::ZipNotOpen);
             return StatusCode(ZipNotOpen);
         }
-        else{
 
-            for( ZSTM_FLNUM_T now ; now < this->FileCount ; now++){
+        for( ZSTM_FLNUM_T now ; now < this->FileCount ; now++){
 
-                zip_file_t *file = zip_fopen_index( this->Archive , this->FileCount, 0);
-                if( file == NULL ){
-                    this->PutErrorMessage( FunctionName::Unzip , ErrorText::IndexFile , this->FileStat[now].name);
-                    return StatusCode(IndexFile);
-                }
-                else{
-                    ZSTM_PATH_T outpath = NULL;
-                    ZSTM_SIZE_T malloc_size = (::strlen(outdir) + :: strlen( this->FileStat[now].name) ++ );
-                    outpath = ::malloc( outpath , malloc_size); 
-                    if( outpath == NULL ){
-                        this->PutErrorMessage( FunctionName::Unzip , ErrorText::AllocateMemory , ToString( StatusCode( AllocateMemory )));
-                        return StatusCode( AllocateMemory );
-                    }
-                    else{
-                         FILE* localfile = ::fopen()
+            zip_file_t *file = zip_fopen_index( this->Archive , this->FileCount, 0);
+            if( file == NULL ){
+                this->PutErrorMessage( FunctionName::Unzip , ErrorText::IndexFile , this->FileStat[now].name);
+                return StatusCode(IndexFile);
+            }
+
+            ZSTM_PATH_T outpath = NULL;
+            ZSTM_SIZE_T malloc_size = (::strlen(outdir) + :: strlen( this->FileStat[now].name) ++ );
+            outpath = ::malloc( malloc_size); 
+
+            if( outpath == NULL ){
+                this->PutErrorMessage( FunctionName::Unzip , ErrorText::AllocateMemory , ToString( malloc_size )));
+                return StatusCode( AllocateMemory );
+            }
+
+            outpath = outdir ;
+            ::strncat( outpath , this->stat[now].name , malloc_size );
+            FILE* localfile = ::fopen( outpath , "w+" );
+
+            if( localfile == NULL ){
+                this->PutErrorMessage( FunctionName::Unzip , ErrorText::CreateLocalFile , outpath );
+                return StatusCode( CreateLocalFile);
+            }
+                        
+            ZSTM_SIZE_T now_size = 0;
+            while( now_size < this->stat[now].size ){
+                ZSTM_UINT8_BT* buffer;
+                if( this->CleanBuffer(buffer) == StatusCode)
+                if( (ZSTM_INT64_BT) zip_fread( file , buffer , this->BufferSize) < 0 )
+            }
+                        }
                     }
                    
                 }
@@ -113,11 +127,19 @@ namespace zstm{
     }
 
     ZSTM_BOOL_BT izipsrream::CleanBuffer( ZSTM_CSTR_T buffer){
-        buffer = malloc( this->BufferSize );
-        if( buffer == NULL){
-            this -> PutErrorMessage( FuncNm_CleanBuffer , AllocateFail ,);
+
+        if( buffer != NULL ){
+            free( buffer );
+            buffer = NULL;
+            return StatusCode( Okay );
         }
-        memset( buffer , 0 , this->BufferSize);
+
+        buffer = ::malloc( this->BufferSize++ );
+        if( buffer == NULL){
+            this -> PutErrorMessage( FunctionName::CleanBuffer , ErrorText::AllocateFail , ToString( this->BufferSize ));
+        }
+        memset( buffer , 0 , this->BufferSize );
+        return StatusCode( Okay );
     }
 
     ZSTM_BOOL_BT izipstream::SetZipPassword( const ZSTM_CSTR_T pw ){

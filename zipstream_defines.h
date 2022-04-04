@@ -20,7 +20,8 @@ namespace zstm{
         CloseZip,
         IndexFile,
         Int2String,
-        PutErrorMsg
+        PutErrorMsg,
+        CreateLocalFile
     }
 
     const ZSTM_BOOL_BT errlv_normal = 1;
@@ -36,10 +37,10 @@ namespace zstm{
     namespace ErrorText{
         ZSTM_ERRMSG_T   BufSizeTooBig_1   =  "Buffer size that you set( ";
         ZSTM_ERRMSG_T   BufSizeTooBig_2   =  "bytes) too big! It cannot be bigger than";
-        ZSTM_ERRMSG_T   Byte              =  "bytes.";
         ZSTM_ERRMSG_T   ZipNotOpen        =  "No compressed packages were opened.";
         ZSTM_ERRMSG_T   AllocateFail      =  "Failed to allocate memory. size=";
         ZSTM_ERRMSG_T   IndexFile         =  "Failed to index file:";
+        ZSTM_ERRMSG_T   CreateLocalFile   =  "Failed to crafte local file:"
     }
 
     // Function Names

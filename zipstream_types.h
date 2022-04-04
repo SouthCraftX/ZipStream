@@ -7,7 +7,7 @@ namespace zstm  {
     
     // Basic Types
     using ZSTM_INT32_BT     =   int32_t;
-    using ZSTM_INT64_ST     =   int64_t;
+    using ZSTM_INT64_BT     =   int64_t;
     using ZSTM_INT16_BT     =   int16_t;
     using ZSTM_INT8_BT      =   int8_t;
 

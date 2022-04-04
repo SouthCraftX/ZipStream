@@ -36,7 +36,7 @@ namespace zstm{
             ZSTM_BOOL_BT    PutErrorMessage     (  ZSTM_FUNCNM_T  , std::inttializer_list<ZSTM_FUNCNM_T>  );
             ZSTM_BOOL_BT    SetBufferSize       ( const ZSTM_SIZE_T );
             ZSTM_BOOL_BT    CleanBuffer         ();
-            ZSTM_CSTR_BT    ZipPassWord;
+            ZSTM_CSTR_BT    ZipPassword;
             ZSTM_INT32_BT   ErrorLevel;
             ZSTM_SIZE_T     BufferSize;
             zip_stat_t*     FileStat;
