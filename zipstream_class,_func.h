@@ -87,7 +87,7 @@ namespace zstm{
     }
 
     ZSTM_BOOL_BT operator>>(const izipstream & zs,const ZSTM_PATH_T outpath ){
-        return zs->Unzip( outpath );
+        return zs.Unzip( outpath );
     }
 
     //Get the error message
