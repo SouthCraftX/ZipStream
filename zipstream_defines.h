@@ -30,7 +30,7 @@ namespace zstm{
     const ZSTM_BOOL_BT errlv_normal = 1;
     const ZSTM_BOOL_BT errlv_lowest = 0;
     const ZSTM_SIZE_T DefaultBufferSize = 8192 ;
-    const ZSTM_SIZE_T MaxBufferSize = (2*1024*1024); //2MB
+    constexpr ZSTM_SIZE_T MaxBufferSize = (2*1024*1024); //2MB
     const ZSTM_SIZE_T MinBufferSize = 128; 
 
 
