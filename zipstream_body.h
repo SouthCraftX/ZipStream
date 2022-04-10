@@ -24,14 +24,17 @@ namespace zstm{
             ZSTM_INT32_BT   GetFileNum          ()  const;
             ZSTM_BOOL_BT    GetFileStat         ();
             ZSTM_BOOL_BT    Unzip               ( const ZSTM_PATH_T );
-            ZSTM_BOOL_BT    operator>>          (const ZSTM_PATH_T);
-
+            ZSTM_BOOL_BT    operator>>          ( const ZSTM_PATH_T );
+            ZSTM_SIZE_T     GetFileSize         ( const ZSTM_PATH_T );
+            ZSTM_CSTR_BT    GetFileComment      ( const ZSTM_PATH_T , const ZSTN_CSTR_BT , const ZSTM_ENCM_T);
+            ZSTM_CSTR_BT    GetZipComment      ( const ZSTN_CSTR_BT ,const ZSTM_ENCM_T);
+            
         protected:
-            ZSTM_CSTR_T     ZipPath;
-            ZSTM_CSTR_T     ErrorMessage;
-            zip_t*          Archive ;
-            ZSTM_INT32_BT   ErrorCode ;
-            ZSTM_INT32_BT   FileCount;
+            ZSTM_CSTR_BT     ZipPath;
+            ZSTM_CSTR_BT     ErrorMessage;
+            zip_t*           Archive ;
+            ZSTM_INT32_BT    ErrorCode ;
+            ZSTM_INT32_BT    FileCount;
 
         private:
             ZSTM_BOOL_BT    PutErrorMessage     (  ZSTM_FUNCNM_T  , std::inttializer_list<ZSTM_FUNCNM_T>  );
@@ -41,6 +44,7 @@ namespace zstm{
             ZSTM_INT32_BT   ErrorLevel;
             ZSTM_SIZE_T     BufferSize;
             zip_stat_t*     FileStat;
+            ZSTM_ENCM_T     Encoding;
             izipstream                          ( const char* );
     }
 

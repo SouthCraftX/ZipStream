@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <limits>
+
 namespace zstm  {
     
     // Basic Types
@@ -34,6 +36,8 @@ namespace zstm  {
     using ZSTM_FUNCNM_T     =   const char* const;
     using ZSTM_FLNUM_T      =   ZSTM_UINT64_BT;
     using ZSTM_PATH_T       =   ZSTM_CSTR_BT;
+    using ZSTM_ENCM_T       =   zip_flags_t;
+    using ZSTM_INDEX_T      =   ZSTM_UINT64_BT;
 }
 
 #endif
