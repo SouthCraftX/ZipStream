@@ -33,9 +33,9 @@ namespace zstm{
     //Unzip a compressed package
     ZSTM_BOOL_BT izipstream::Unzip( const ZSTM_PATH_T outdir ) const{
 
-        if( this->Archive == NULL ){
-            this->PutErrorMessage( FunctionName::Unzip , ErrorText::ZipNotOpen);
-            return StatusCode(ZipNotOpen);
+        if( this->IsZipOpen() == StatusCode( ZipNotOpen )){
+            this->PutErrorMessage( FunctionName::Unzip , ErrorText::ZipNotOpen );
+            return StatusCode(  ZipNotOpen );
         }
 
         for( ZSTM_FLNUM_T now = 0 ; now < this->FileCount ; now++){
@@ -98,8 +98,49 @@ namespace zstm{
         return this->ErrorMessage;
     }
 
-    ZSTM_SIZE_T GetFileSize( const ZSTM_PATH_T ){
+    ZSTM_SIZE_T GetFileSize( const ZSTM_PATH_T filename ){
 
+        if( this->IsZipOpen() == StatusCode( ZipNotOpen )){
+            this->PutErrorMessage( FunctionName::GetZipComment , ErrorText::ZipNotOpen );
+            return StatusCode(  ZipNotOpen );
+        }
+
+        ZSTM_INDEX_T index = this->SearchFile( filename );
+        if( index == SearchNoResult ){
+            return SearchNoResult;
+        }
+
+        return this->FileStat[index].size;
+    }
+
+    ZSTM_UINT32_T GetFileCrc( const ZSTM_PATH_T filename ){
+
+        if( this->IsZipOpen() == StatusCode( ZipNotOpen )){
+            this->PutErrorMessage( FunctionName::GetZipComment , ErrorText::ZipNotOpen );
+            return StatusCode(  ZipNotOpen );
+        }
+
+        ZSTM_INDEX_T index = this->SearchFile( filename );
+        if( index == SearchNoResult ){
+            return SearchNoResult;
+        }
+
+        return this->FileStat[index].crc;
+    }
+
+    ZSTM_SIZE_T GetFileCompressedSize( const ZSTM_PATH_T filename ){
+
+        if( this->IsZipOpen() == StatusCode( ZipNotOpen )){
+            this->PutErrorMessage( FunctionName::GetZipComment , ErrorText::ZipNotOpen );
+            return StatusCode(  ZipNotOpen );
+        }
+
+        ZSTM_INDEX_T index = this->SearchFile( filename );
+        if( index == SearchNoResult ){
+            return SearchNoResult;
+        }
+
+        return this->FileStat[index].comp_size;
     }
 
     //Put a error message to 'this->ErrorMsg' and error stream 
@@ -149,6 +190,10 @@ namespace zstm{
 
     ZSTM_UINT32_BT  GetZipComment(ZSTM_ENCM_T encoding , ZSTM_CSTR_BT comment, ZSTM_ENCM_T encoding ){
         
+        if( this->IsZipOpen() == StatusCode( ZipNotOpen )){
+            this->PutErrorMessage( FunctionName::GetZipComment , ErrorText::ZipNotOpen );
+            return StatusCode(  ZipNotOpen );
+        }
         // The length of the comment
         ZSTM_UINT32_BT length; 
 
@@ -189,6 +234,13 @@ namespace zstm{
         }
         memset( buffer , 0 , this->BufferSize );
         return StatusCode( Okay );
+    }
+
+    ZSTM_BOOL_BT IsZipOpen(){
+        if( this->Archive == NULL ){
+            return StatusCode( ZipNotOpen );
+        }
+        return StatusCOde( Okay );
     }
 
     ZSTM_BOOL_BT izipstream::SetZipPassword( const ZSTM_CSTR_T pw ){
@@ -238,8 +290,18 @@ namespace zstm{
     }
 
     //Returns the number of files in the comprssed package
-    int izipstream::GetFileNum() const {
+    ZSTM_FLNUM_T izipstream::GetFileNum() const {
         return this->FileCount;
+    }
+
+    ZSTM_BOOL_BT izipstream::SetEncoding( const ZSTM_ENCM_T enc ){
+
+        if( enc == encoding::Auto || enc == encdong::CP437 ){
+            this->Encoding = enc;
+            return StatusCode( Okay );
+        } 
+        this->PutErrorMessage( FunctionName::SetEncoding , ErrorText::InvaildEncoding );
+        return StatusCode( InvaildEncoding );
     }
 
     izipstream::izipstream( const char* zippath = NULL , size_t buffersize = DefaultBufferSize ){
@@ -262,10 +324,12 @@ namespace zstm{
     ZSTM_CSTR_BT ToString( ZSTM_INT64_BT number ){
         static char temp[21];
         memset( temp , 0 ,  21 ) ;
-        if( sprintf( temp , "%ld ", number) < 0 ){
+        if( sprintf( temp , "%ld ", number) <= 0 ){
             return StatusCode( Int2String );
         }
-        return StatusCode( Okay);
-}
+        return StatusCode( Okay );
+    }
 
+
+}
 #endif

@@ -27,7 +27,8 @@ namespace zstm{
         WriteLocalFile,
         GetFileComment,
         NoSuchFileDir,
-        NoComment
+        NoComment,
+        InvaildEncoding
     };
     constexpr ZSTM_FLNUM_T  SearchNoResult      =   ZIP_UINT64_MAX;
 
@@ -66,11 +67,13 @@ namespace zstm{
         ZSTM_ERRMSG_T   SearchNoResult    =  "No such a file:";
         ZSTM_ERRMSG_T   FileNoComment     =  "No comments on this file:";
         ZSTM_ERRMSG_T   ZipNoComment      =  "No comments on the compressed package.";
+        ZSTM_ERRMSG_T   InvaildEncoding   =  "Invaild encoding";
 
     }
 
     // Function Names
     namespace FunctionName{
+        ZSTM_FUNCNM_T  SetEncoding      =  "SetEncoding()";
         ZSTM_FUNCNM_T  OpenFL           =  "OpenFile()";
         ZSTM_FUNCNM_T  CloseFL          =  "CloseFL()";
         ZSTM_FUNCNM_T  SerFL            =  "SearchFile()";

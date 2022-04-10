@@ -4,19 +4,20 @@
 #include <stdint.h>
 #include <iostream>
 #include <limits>
+#include <ctime>
 
 namespace zstm  {
     
     // Basic Types
-    using ZSTM_INT32_BT     =   int32_t;
-    using ZSTM_INT64_BT     =   int64_t;
-    using ZSTM_INT16_BT     =   int16_t;
-    using ZSTM_INT8_BT      =   int8_t;
+    using ZSTM_INT32_BT     =   ::int32_t;
+    using ZSTM_INT64_BT     =   ::int64_t;
+    using ZSTM_INT16_BT     =   ::int16_t;
+    using ZSTM_INT8_BT      =   ::int8_t;
 
-    using ZSTM_UINT32_BT    =   uint32_t;
-    using ZSTM_UINT64_BT    =   uint64_t;
-    using ZSTM_UINT16_BT    =   uint16_t;
-    using ZSTM_UINT8_BT     =   uint8_t;
+    using ZSTM_UINT32_BT    =   ::uint32_t;
+    using ZSTM_UINT64_BT    =   ::uint64_t;
+    using ZSTM_UINT16_BT    =   ::uint16_t;
+    using ZSTM_UINT8_BT     =   ::uint8_t;
 
     using ZSTM_BYTE_BT      =   ZSTM_UINT8_BT;
     using ZSTM_WORD_BT      =   ZSTM_UINT16_BT;
@@ -38,6 +39,7 @@ namespace zstm  {
     using ZSTM_PATH_T       =   ZSTM_CSTR_BT;
     using ZSTM_ENCM_T       =   zip_flags_t;
     using ZSTM_INDEX_T      =   ZSTM_UINT64_BT;
+    using ZSTM_TIME_T       =   ::time_t;
 }
 
 #endif
